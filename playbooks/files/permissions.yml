@@ -1,0 +1,9 @@
+---
+- name: Change file permissions
+  hosts: localhost
+
+  tasks:
+    - name: Change permissions
+      file:
+        path: /home/daniel/whatever.txt
+        mode: a+w

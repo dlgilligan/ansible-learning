@@ -1,0 +1,12 @@
+---
+- name: Copy files to clients
+  hosts: all
+
+  tasks:
+    - name: Copy files
+      copy:
+        src: /home/daniel/whatever.txt
+        dest: /tmp
+        owner: daniel
+        group: daniel
+        mode: 0644

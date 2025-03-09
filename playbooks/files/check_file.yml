@@ -1,0 +1,13 @@
+---
+- name: Check file attributes
+  hosts: localhost
+
+  tasks:
+    - name: Get attributes
+      stat:
+        path: /etc/hosts
+      register: fs
+
+    - name: Print attributes
+      debug:
+        msg: "{{ fs }}"
