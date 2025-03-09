@@ -1,0 +1,7 @@
+---
+- name: Run a shell script
+  hosts: localhost
+
+  tasks:
+    - name: Run the script
+      shell: "/home/daniel/whatever.sh"

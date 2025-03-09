@@ -1,0 +1,15 @@
+---
+- name: Schedule a cronjob
+  hosts: localhost
+
+  tasks:
+    - name: Schedule job
+      cron:
+        name: This job is scheduled by Ansible
+        minute: "0"
+        hour: "10"
+        day: "*"
+        month: "*"
+        weekday: "4"
+        user: daniel
+        job: "/home/daniel/script.sh"
