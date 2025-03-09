@@ -1,0 +1,31 @@
+---
+- name: Create and Remove File
+  hosts: localhost
+
+  tasks:
+    - name: Create a directory
+      file:
+        path: /tmp/seinfeld
+        owner: daniel
+        group: daniel
+        mode: 770
+        state: directory
+
+    - name: Create a file in the directory
+      file:
+        path: /tmp/seinfeld/jerry
+        state: touch
+
+    - name: Stat the new file
+      stat:
+        path: /tmp/seinfeld/jerry
+      register: fs
+
+    - name: Print the attributes of the new file
+      debug:
+        msg: "{{ fs }}"
+
+    - name: Remove new file
+      file:
+        path: /tmp/seinfeld/jerry
+        state: absent
