@@ -1,0 +1,12 @@
+---
+- name: Create users through loop (loop)
+  hosts: localhost
+
+  tasks:
+    - name: Create users
+      user:
+        name: '{{ item }}'
+      loop:
+        - jerry
+        - kramer
+        - elaine
