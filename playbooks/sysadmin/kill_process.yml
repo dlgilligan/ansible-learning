@@ -1,0 +1,14 @@
+---
+- name: Kill a running process
+  hosts: localhost
+
+  tasks:
+    - name: Get running processes from the client
+      ignore_errors: yes
+      shell: "ps -few | grep top | awk '{print $2}'"
+      register: running_processes
+
+    - name: Kill the running process
+      ignore_errors: yes
+      shell: "kill {{ item }}"
+      with_items: "{{ running_process.stdout_lines }}"
