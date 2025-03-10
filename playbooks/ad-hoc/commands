@@ -1,0 +1,5 @@
+ansible all -m ping
+ansible all -m file -a "path=... state=touch mode=..."
+ansible all -m file -a "path=... state=absent"
+ansible all -m copy -a "src=... dest=... owner=daniel group=daniel mode=..."
+
