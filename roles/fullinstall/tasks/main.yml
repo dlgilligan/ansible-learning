@@ -1,0 +1,23 @@
+---
+- name: Setup httpd
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start httpd
+      service:
+        name: httpd
+        state: started
+
+    - name: Open firewall port
+      firewalld:
+        service: httpd
+        state: enabled
+        permanent: true
+
+    - name: Restart firewall
+      service:
+        name: httpd
+        state: restarted
