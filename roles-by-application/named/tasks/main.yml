@@ -1,0 +1,7 @@
+---
+- name: Install named
+  tasks:
+    - name: Install named
+      yum:
+        name: named
+        state: present
