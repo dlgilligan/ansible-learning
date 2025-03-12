@@ -1,0 +1,16 @@
+---
+- name: Setup Apache server
+  hosts: localhost
+
+  tasks:
+    - name: Install Apache
+      yum:
+        name: httpd
+        state: present
+      tags: i-httpd
+
+    - name: Start Apache
+      service:
+        name: httpd
+        state: started
+      tags: s-httpd
