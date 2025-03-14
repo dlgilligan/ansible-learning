@@ -1,0 +1,10 @@
+---
+- name: Print Hello world
+  hosts: localhost
+  vars:
+    say: Hello world!
+
+  tasks:
+    - name: Print the message
+      debug:
+        msg: "{{ say }}"
