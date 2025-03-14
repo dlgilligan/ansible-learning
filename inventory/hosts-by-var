@@ -1,0 +1,14 @@
+[webservers]
+client1.xyz.com
+client2.xyz.com
+
+[abc]
+server1 ansible_host=201.0.113.111
+server2 ansible_host=201.0.113.112
+server3 ansible_host=201.0.113.113
+server4 ansible_host=abc.example.com
+
+[abc:vars]
+fooserver=foo.abc.example.com
+ntpserver=ntp.abc.example.com
+proxyserver=proxy.abc.example.com
