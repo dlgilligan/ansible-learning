@@ -1,0 +1,10 @@
+[proxy]
+node1.ansi.example.com
+
+[webservers]
+node2.ansi.example.com
+node3.ansi.example.com
+
+[database]
+node3.ansi.example.com
+node4.ansi.example.com
