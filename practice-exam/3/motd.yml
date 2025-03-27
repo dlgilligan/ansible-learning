@@ -1,0 +1,24 @@
+---
+- name: Change message of the day for different servers
+  become: yes
+  hosts: all
+
+  tasks:
+    - name: Change motd for proxy servers
+      copy:
+        dest: /etc/motd
+        content: "Welcome to HAProxy server\n"
+      when: '"proxy" in group_names'
+
+    - name: Change motd for webservers
+      copy:
+        dest: /etc/motd
+        content: "Welcome to Apache server\n"
+      when: '"webservers" in group_names'
+
+    - name: Change motd for database servers
+      copy:
+        dest: /etc/motd
+        content: "Welcome to HAProxy server\n"
+      when: '"database" in group_names'
+
