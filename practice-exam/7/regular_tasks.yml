@@ -1,0 +1,16 @@
+---
+- name: Create a scheduled task on proxy servers
+  hosts: proxy
+  become: yes
+
+  tasks:
+    - name: Create cronjob for script
+      cron:
+        name: Appends date to /var/log/time.log
+        user: root
+        job: "date >> /var/log/time.log"
+        minute: "0"
+        hour: "*"
+        day: "*"
+        month: "*"
+        weekday: "*"
