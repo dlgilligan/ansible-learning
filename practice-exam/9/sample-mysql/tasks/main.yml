@@ -15,11 +15,6 @@
         vg: vg_database
         pvs: /dev/sdb1
 
-    - name: Install lvm2 dependency
-      package:
-        name: lvm2
-        state: present
-
     - name: Create logical volume
       lvol:
         vg: vg_database
