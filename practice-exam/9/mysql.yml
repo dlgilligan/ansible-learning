@@ -1,0 +1,7 @@
+---
+- name: Configure database servers
+  hosts: database
+  become: yes
+  vars_files: ../vars/secret.yml
+  roles:
+    - sample-mysql
