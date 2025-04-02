@@ -40,6 +40,18 @@
         name: mariadb
         state: present
 
+    - name: mysql server config file
+      template:
+        src: my.cnf.j2
+        dest: /etc/my.cnf.d/mariadb-server.cnf
+        backup: yes
+
+    - name: Enable mariadb
+      systemd:
+        name: mariadb
+        enabled: yes
+        state: started
+
     - name: Open firewall for MySQL
       firewalld:
         permanent: true
@@ -47,3 +59,26 @@
         immediate: true
         state: enabled
         port: 3306/TCP
+
+    - name: Check if the DB credentials exist
+      state:
+        path: ~/.my.cnf
+      register: credentials_file
+
+    - block:
+
+      - name: Setup the root password
+        mysql_user:
+          login_unix_socket: /var/lib/mysql/mysql.sock
+          name: root
+          password: "{{ database_password }}"
+
+      - name: Create the DB credentials file
+        copy:
+          dest: ~/.my.cnf
+          content: |
+            [client]
+            user=root
+            password={{ database_password }}
+
+      when: not credentials_file.stat.exists
