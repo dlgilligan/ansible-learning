@@ -1,0 +1,34 @@
+---
+  - name: Install packages
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ packages }}"
+
+  - name: Enable Apache
+    systemd:
+      name: httpd
+      enabled: true
+      state: started
+
+  - name: Configure firewall for HTTP(S)
+    firewalld:
+      immediate: true
+      permanent: true
+      state: enabled
+      service: "{{ item }}"
+    with_items: "{{ services }}"
+
+  - name: Change Listen directive
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      state: present
+      regexp: ^Listen
+      line: "Listen {{ ansible_facts['ansible_default_ipv4']['address'] }}:80"
+    notify: Restart Apache
+
+  - name:
+    template:
+      src: index.html.j2
+      dest: /var/www/html/index.html
+    notify: Restart Apache
