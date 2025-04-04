@@ -61,7 +61,7 @@
         port: 3306/TCP
 
     - name: Check if the DB credentials exist
-      state:
+      stat:
         path: ~/.my.cnf
       register: credentials_file
 
