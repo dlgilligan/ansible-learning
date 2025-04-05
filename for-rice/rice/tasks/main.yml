@@ -23,11 +23,6 @@
 
 - name: Install JetBrainsMono NF
   block:
-    - name: Check if dir exists
-      stat:
-        path: "/home/{{ user }}/.local/share/fonts"
-      register: fonts_register
-
     - name: Create fonts directory
       file:
         path: "/home/{{ user }}/.local/share/fonts"
@@ -35,7 +30,6 @@
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: 0755
-      when: not fonts_register.stat.exists
 
     - name: Download JetBrainsMono
       get_url:
@@ -54,6 +48,62 @@
     - name: Refresh available fonts
       shell: "/usr/bin/fc-cache -rv"
 
-- name: 
+- name: Shared sway config files
+  block:
+    - name: Create directories for shared files
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      with_items:
+        - /usr/share/sway
+        - /usr/share/sway/config.d
+        - /usr/share/sway-systemd
+        - /etc/sway
+        - /etc/sway/config.d
 
+    - name: Copy files to /usr/share/sway/config.d
+      copy:
+        src: "{{ item }}"
+        dest: "/usr/share/sway/config.d/{{ item }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items: "{{ share_sway_configd }}"
 
+    - name: Copy files to /usr/share/sway-systemd
+      copy:
+        src: "{{ item }}"
+        dest: "/usr/share/sway-systemd/{{ item }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items: "{{ share_sway_systemd }}"
+
+    - name: Copy files to /etc/sway/config.d
+      copy:
+        src: "{{ item }}"
+        dest: "/etc/sway/config.d/{{ item }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items: "{{ etc_sway_configd }}"
+
+    # Could also copy general contents of /etc/sway but we'll come back
+
+- name: Configure sway
+  block:
+
+- name: Configure SDDM
+  block:
+
+- name: Configure kitty
+  block:
+
+- name: Configure waybar
+  block:
+
+- name: Configure dunst
+  block:

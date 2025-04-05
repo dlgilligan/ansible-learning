@@ -34,3 +34,28 @@ repo_dependencies:
   - xdg-user-dirs
   - nwg-wrapper
   - xhost
+  # Greeter
+  - sddm
+
+share_sway_configd:
+  - 50-rules-browser.conf
+  - 50-rules-pavucontrol.conf
+  - 50-rules-policykit-agent.conf
+  - 60-bindings-brightness.conf
+  - 60-bindings-media.conf
+  - 60-bindings-screenshot.conf
+  - 60-bindings-volume.conf
+  - 65-mode-passthrough.conf
+  - 90-bar.conf
+  - 90-swayidle.conf
+  - 95-autostart-policykit-agent.conf
+  - 95-xdg-desktop-autostart.conf
+  - 95-xdg-user-dirs.conf
+
+share_sway_systemd:
+  - 95-system-keyboard-config.conf
+  - 95-xdg-desktop-autostart.conf
+
+etc_sway_configd:
+  - 10-systemd-cgroups.conf
+  - 10-systemd-session.conf
