@@ -1,2 +1,59 @@
 ---
-# tasks file for rice
+- name: Install dnf dependencies
+  dnf:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ repo_dependencies }}"
+
+- name: Create Downloads directory
+  file:
+    path: "/home/{{ user }}/Downloads"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0755
+
+- name: Create .config directory
+  file:
+    path: ~/home/{{ user }}/.config
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0700
+
+- name: Install JetBrainsMono NF
+  block:
+    - name: Check if dir exists
+      stat:
+        path: "/home/{{ user }}/.local/share/fonts"
+      register: fonts_register
+
+    - name: Create fonts directory
+      file:
+        path: "/home/{{ user }}/.local/share/fonts"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+      when: not fonts_register.stat.exists
+
+    - name: Download JetBrainsMono
+      get_url:
+        dest: "/home/{{ user }}/Downloads/JetBrainsMono.zip"
+        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+    - name: Extract JetBrainsMono
+      unarchive:
+        src: "/home/{{ user }}/Downloads/JetBrainsMono.zip"
+        dest: "/home/{{ user }}/.local/share/fonts"
+        remote_src: yes
+
+    - name: Refresh available fonts
+      shell: "/usr/bin/fc-cache -rv"
+
+- name: 
+
+

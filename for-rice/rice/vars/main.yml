@@ -1,2 +1,36 @@
 ---
-# vars file for rice
+user: daniel
+repo_dependencies:
+  # Shell
+  - zsh
+  # Terminal
+  - kitty
+  # Launcher
+  - rofi
+  # Browser
+  - firefox
+  # Editor
+  - vim
+  - neovim
+  # Editor config dependencies
+  - gcc
+  - make
+  - git
+  - ripgrep
+  - fd
+  - unzip
+  # Sway & DE
+  - sway
+  - swaylock
+  - swayidle
+  - dunst
+  - libnotify
+  - playerctl
+  - grimshot
+  - pulseaudio
+  - pulseaudio-utils
+  - waybar
+  - lxqt-policykit
+  - xdg-user-dirs
+  - nwg-wrapper
+  - xhost
