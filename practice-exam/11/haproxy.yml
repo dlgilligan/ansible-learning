@@ -1,0 +1,16 @@
+---
+- name: Use geerlingguy.haproxy
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Open firewall for HTTP
+      firewalld:
+        immediate: yes
+        enabled: yes
+        state: enabled
+        service: http
+      when: '"proxy" in group_names'
+  roles:
+    - name: geerlingguy.haproxy
+      when: '"proxy" in group_names'
