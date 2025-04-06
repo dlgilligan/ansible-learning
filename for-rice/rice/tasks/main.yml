@@ -11,7 +11,7 @@
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: 0755
+    mode: '0755'
 
 - name: Create .config directory
   file:
@@ -19,7 +19,7 @@
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: 0700
+    mode: '0700'
 
 - name: Install JetBrainsMono NF
   block:
@@ -29,7 +29,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Download JetBrainsMono
       get_url:
@@ -37,7 +37,7 @@
         url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
     - name: Extract JetBrainsMono
       unarchive:
@@ -56,7 +56,7 @@
         state: directory
         owner: root
         group: root
-        mode: 0755
+        mode: '0755'
       with_items:
         - /usr/share/sway
         - /usr/share/sway/config.d
@@ -70,7 +70,7 @@
         dest: "/usr/share/sway/config.d/{{ item }}"
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       with_items: "{{ share_sway_configd }}"
 
     - name: Copy files to /usr/share/sway-systemd
@@ -79,7 +79,7 @@
         dest: "/usr/share/sway-systemd/{{ item }}"
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       with_items: "{{ share_sway_systemd }}"
 
     - name: Copy files to /etc/sway/config.d
@@ -88,7 +88,7 @@
         dest: "/etc/sway/config.d/{{ item }}"
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       with_items: "{{ etc_sway_configd }}"
 
     # Could also copy general contents of /etc/sway but we'll come back
@@ -101,7 +101,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Copy sway config
       copy:
@@ -109,7 +109,7 @@
         dest: "/home/{{ user }}/.config/sway/config"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
 - name: Configure swaylock
   block:
@@ -119,7 +119,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Copy swaylock config
       copy:
@@ -127,7 +127,7 @@
         dest: "/home/{{ user }}/.config/swaylock/config"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
 - name: Configure SDDM
   block:
@@ -143,7 +143,7 @@
         remote_src: yes
         owner: root
         group: root
-        mode: 0755
+        mode: '0755'
 
     - name: Upload customized monochrome theme config
       copy:
@@ -151,7 +151,7 @@
         dest: /usr/share/sddm/themes/monochrome/theme.conf
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
         force: true
 
     - name: Remove repo
@@ -166,7 +166,7 @@
         state: directory
         owner: root
         group: root
-        mode: 0755
+        mode: '0755'
 
     - name: Upload sddm config
       copy:
@@ -174,7 +174,7 @@
         dest: /etc/sddm.conf.d/wayland-sway.conf
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
 
 - name: Configure kitty
   block:
@@ -184,7 +184,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Upload theme
       copy:
@@ -192,7 +192,7 @@
         dest: "/home/{{ user }}/.config/kitty/theme.conf"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
     - name: Upload config
       copy:
@@ -200,7 +200,64 @@
         dest: "/home/{{ user }}/.config/kitty/kitty.conf"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
+
+- name: ZSH configuration
+  block:
+    - name: Change default shell to zsh
+      user:
+        name: "{{ user }}"
+        shell: "/bin/zsh"
+
+    - name: Download oh-my-zsh
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: "/home/{{ user }}/install.sh"
+        mode: '0755'
+
+    - name: Install oh-my-zsh
+      script:
+        cmd: "/home/{{ user }}/install.sh"
+
+    - name: Download zsh plugins
+      git:
+        repo: "{{ item.repo }}"
+        dest: "/home/{{ user }}/.oh-my-zsh/custom/plugins/{{ item.name }}"
+      with_items: "{{ zsh_plugins }}"
+
+    - name: Change ZSH theme
+      lineinfile:
+        path: "/home/{{ user }}/.zshrc"
+        regexp: ^ZSH_THEME
+        line: ZSH_THEME="dst"
+        state: present
+
+    - name: Enable plugins
+      lineinfile:
+        path: "/home/{{ user }}/.zshrc"
+        regexp: ^plugins
+        line: plugins=(git zsh-autosuggestions zsh-syntax-highlighting you-should-use zsh-bat)
+        state: present
+
+    - name: Add aliases to .zshrc
+      blockinfile:
+        path: "/home/{{ user }}/.zshrc"
+        block: |
+          alias vi="nvim"
+          alias vim="nvim"
+          alias dnf="sudo dnf"
+          alias wifi='f() { nmcli device wifi connect $1 --ask };f'
+          alias ports='netstat -tulanp'
+          alias meminfo='free -m -l -t'
+          alias psmem='ps auxf | sort -nr -k 4'
+          alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+          alias pscpu='ps auxf | sort -nr -k 3'
+          alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+          alias wget='wget -c'
+          alias df='df -H'
+          alias du='du -ch'
+          alias fast='fastfetch'
+        state: present
 
 - name: Configure rofi
   block:
@@ -210,7 +267,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Upload rofi theme
       copy:
@@ -218,7 +275,7 @@
         dest: /usr/share/rofi/themes/minimal.rasi
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
 
     - name: Create rofi config file
       file:
@@ -226,7 +283,7 @@
         state: touch
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
     - name: Insert relevant text in rofi config
       lineinfile:
@@ -242,7 +299,7 @@
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: '0755'
 
     - name: Upload config.jsonc
       copy:
@@ -250,7 +307,7 @@
         dest: "/home/{{ user }}/.config/waybar/config.jsonc"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
     - name: Upload style.css
       copy:
@@ -258,7 +315,7 @@
         dest: "/home/{{ user }}/.config/waybar/style.css"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
+        mode: '0644'
 
 - name: Configure dunst
   block:

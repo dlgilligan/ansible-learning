@@ -3,6 +3,7 @@ user: daniel
 repo_dependencies:
   # Shell
   - zsh
+  - bat
   # Terminal
   - kitty
   # Launcher
@@ -59,3 +60,13 @@ share_sway_systemd:
 etc_sway_configd:
   - 10-systemd-cgroups.conf
   - 10-systemd-session.conf
+
+zsh_plugins:
+  - repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    name: zsh-autosuggestions
+  - repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    name: zsh-syntax-highlighting
+  - repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
+    name: zsh-you-should-use
+  - repo: https://github.com/fdellwing/zsh-bat.git
+    name: zsh-bat
