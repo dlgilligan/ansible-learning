@@ -149,6 +149,9 @@
       copy:
         src: sddm-theme.conf
         dest: /usr/share/sddm/themes/monochrome/theme.conf
+        owner: root
+        group: root
+        mode: 0644
         force: true
 
     - name: Remove repo
