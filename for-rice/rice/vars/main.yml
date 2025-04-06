@@ -35,6 +35,8 @@ repo_dependencies:
   - xdg-user-dirs
   - nwg-wrapper
   - xhost
+  - Thunar
+  - zathura
   # Greeter
   - sddm
 

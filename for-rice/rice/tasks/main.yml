@@ -319,8 +319,27 @@
 
 - name: Configure dunst
   block:
+    - name: Create .config/dunst
+      file:
+        path: "/home/{{ user }}/.config/dunst"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Upload dunstrc
+      copy:
+        src: dunstrc
+        dest: "/home/{{ user }}/.config/dunst/dunstrc"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
 
 - name: Configure nvim
   block:
 
-- name: 
+- name: Configura zathura
+  block:
+
+- name: General system theme (Icons, GTK, etc)
+  block:
