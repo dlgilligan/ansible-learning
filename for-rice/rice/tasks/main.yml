@@ -236,6 +236,29 @@
 
 - name: Configure waybar
   block:
+    - name: Create .config/waybar
+      file:
+        path: "/home/{{ user }}/.config/waybar"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+
+    - name: Upload config.jsonc
+      copy:
+        src: waybar-config.jsonc
+        dest: "/home/{{ user }}/.config/waybar/config.jsonc"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+    - name: Upload style.css
+      copy:
+        src: waybar-style.css
+        dest: "/home/{{ user }}/.config/waybar/style.css"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
 
 - name: Configure dunst
   block:
