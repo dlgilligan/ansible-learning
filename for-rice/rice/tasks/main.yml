@@ -204,7 +204,35 @@
 
 - name: Configure rofi
   block:
-    
+    - name: Create .config/rofi
+      file:
+        path: "/home/{{ user }}/.config/rofi"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+
+    - name: Upload rofi theme
+      copy:
+        src: rofi-theme.rasi
+        dest: /usr/share/rofi/themes/minimal.rasi
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Create rofi config file
+      file:
+        path: "/home/{{ user }}/.config/rofi/config.rasi"
+        state: touch
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+    - name: Insert relevant text in rofi config
+      lineinfile:
+        path: "/home/{{ user }}/.config/rofi/config.rasi"
+        line: '@theme "/usr/share/rofi/themes/minimal.rasi"'
+        state: present
 
 - name: Configure waybar
   block:
