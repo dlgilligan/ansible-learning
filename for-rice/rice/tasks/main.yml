@@ -93,17 +93,123 @@
 
     # Could also copy general contents of /etc/sway but we'll come back
 
-- name: Configure sway
+- name: Configure Sway
   block:
+    - name: Create .config/sway
+      file:
+        path: "/home/{{ user }}/.config/sway"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+
+    - name: Copy sway config
+      copy:
+        src: sway-config
+        dest: "/home/{{ user }}/.config/sway/config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+- name: Configure swaylock
+  block:
+    - name: Create .config/swaylock
+      file:
+        path: "/home/{{ user }}/.config/swaylock"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+
+    - name: Copy swaylock config
+      copy:
+        src: swaylock-config
+        dest: "/home/{{ user }}/.config/swaylock/config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
 
 - name: Configure SDDM
   block:
+    - name: Download SDDM theme
+      git:
+        repo: https://gitlab.com/pwyde/monochrome-kde.git
+        dest: "/home/{{ user }}/Downloads/monochrome-kde"
+
+    - name: Copy monochrome-kde SDDM theme
+      copy:
+        src: "/home/{{ user }}/Downloads/monochrome-kde/sddm/themes/monochrome"
+        dest: /usr/share/sddm/themes/monochrome
+        remote_src: yes
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Upload customized monochrome theme config
+      copy:
+        src: sddm-theme.conf
+        dest: /usr/share/sddm/themes/monochrome/theme.conf
+        force: true
+
+    - name: Remove repo
+      file:
+        path: "/home/{{ user }}/Downloads/monochrome-kde"
+        state: absent
+        recurse: yes
+
+    - name: Create config directory for sddm
+      file:
+        path: /etc/sddm.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Upload sddm config
+      copy:
+        src: wayland-sway.conf
+        dest: /etc/sddm.conf.d/wayland-sway.conf
+        owner: root
+        group: root
+        mode: 0644
 
 - name: Configure kitty
   block:
+    - name: Create .config/kitty
+      file:
+        path: "/home/{{ user }}/.config/kitty"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0755
+
+    - name: Upload theme
+      copy:
+        src: kitty-theme.conf
+        dest: "/home/{{ user }}/.config/kitty/theme.conf"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+    - name: Upload config
+      copy:
+        src: kitty.conf
+        dest: "/home/{{ user }}/.config/kitty/kitty.conf"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+
+- name: Configure rofi
+  block:
+    
 
 - name: Configure waybar
   block:
 
 - name: Configure dunst
   block:
+
+- name: Configure nvim
+  block:
+
+- name: 
