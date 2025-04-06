@@ -337,6 +337,46 @@
 
 - name: Configure nvim
   block:
+    - name: Create .config/nvim
+      file:
+        path: "/home/{{ user }}/.config/nvim"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Clone nvim kickstart repo
+      git:
+        repo: https://github.com/nvim-lua/kickstart.nvim.git
+        dest: "/home/{{ user }}/.config/nvim"
+
+    - name: Change nerd font variable
+      lineinfile:
+        path: "/home/{{ user }}/.config/nvim/init.lua"
+        regexp: ^vim.g.have_nerd_font
+        line: vim.g.have_nerd_font = true
+        state: present
+
+    - name: Add colorscheme
+      lineinfile:
+        path: "/home/{{ user }}/.config/nvim/init.lua"
+        regexp: 'folke/tokyonight.nvim'
+        line: "    'kabouzeid/nvim-jellybeans',"
+        state: present
+
+    - name: Add dependency for color scheme
+      lineinfile:
+        path: "/home/{{ user }}/.config/nvim/init.lua"
+        insertafter: "    'kabouzeid/nvim-jellybeans',"
+        line: "    dependencies = { 'rktjmp/lush.nvim' },"
+        state: present
+
+    - name: Change color scheme
+      lineinfile:
+        path: "/home/{{ user }}/.config/nvim/init.lua"
+        regexp: vim.cmd.colorscheme
+        line: "      vim.cmd.colorscheme 'jellybeans'"
+        state: present
 
 - name: Configura zathura
   block:
