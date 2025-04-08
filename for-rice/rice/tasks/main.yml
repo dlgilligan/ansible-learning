@@ -383,3 +383,73 @@
 
 - name: General system theme (Icons, GTK, etc)
   block:
+    - name: Create .themes directory
+      file:
+        path: "/home/{{ user }}/.themes"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Create .icons directory
+      file:
+        path: "/home/{{ user }}/.icons"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Create gtk config directories
+      file:
+        path: "/home/{{ user }}/.config/{{ item }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+      with_items:
+        - gtk-3.0
+        - gtk-4.0
+
+    - name: Download Equilux theme
+      get_url:
+        url: https://github.com/ddnexus/equilux-theme/archive/refs/tags/equilux-v20181029.tar.gz
+        dest: "/home/{{ user }}/Downloads/equilux-compact.tar.gz"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+
+    - name: Decompress Equilux theme into app
+      unarchive:
+        remote_src: yes
+        src: "/home/{{ user}}/Downloads/equilux-compact.tar.gz"
+        dest: "/home/{{ user }}/.themes/Equilux-compact"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Download Gruvbox icons
+      get_url:
+        url: https://github.com/SylEleuth/gruvbox-plus-icon-pack/archive/refs/tags/v6.2.0.zip
+        dest: "/home/{{ user }}/Downloads/gruvbox-icons.zip"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+
+    - name: Decompress Gruvbox icons
+      unarchive:
+        remote_src: yes
+        src: "/home/{{ user }}/Downloads/gruvbox-icons.zip"
+        dest: "/home/{{ user }}/.icons/"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Upload gtk-3.0 and gtk-4.0 config
+      copy:
+        src: GTK-Settings.ini
+        dest: "/home/{{ user }}/.config//{{ item }}/settings.ini"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+      with_items:
+        - gtk-3.0
+        - gtk-4.0
