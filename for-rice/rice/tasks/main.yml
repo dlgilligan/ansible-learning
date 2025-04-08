@@ -3,7 +3,7 @@
   dnf:
     name: "{{ item }}"
     state: present
-  with_items: "{{ repo_dependencies }}"
+  loop: "{{ repo_dependencies }}"
 
 - name: Create Downloads directory
   file:
@@ -15,7 +15,7 @@
 
 - name: Create .config directory
   file:
-    path: ~/home/{{ user }}/.config
+    path: "/home/{{ user }}/.config"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
@@ -42,7 +42,7 @@
     - name: Extract JetBrainsMono
       unarchive:
         src: "/home/{{ user }}/Downloads/JetBrainsMono.zip"
-        dest: "/home/{{ user }}/.local/share/fonts"
+        dest: "/home/{{ user }}/.local/share/fonts/" # multiple items in zip
         remote_src: yes
 
     - name: Refresh available fonts
@@ -57,7 +57,7 @@
         owner: root
         group: root
         mode: '0755'
-      with_items:
+      loop:
         - /usr/share/sway
         - /usr/share/sway/config.d
         - /usr/share/sway-systemd
@@ -71,7 +71,7 @@
         owner: root
         group: root
         mode: '0644'
-      with_items: "{{ share_sway_configd }}"
+      loop: "{{ share_sway_configd }}"
 
     - name: Copy files to /usr/share/sway-systemd
       copy:
@@ -80,7 +80,7 @@
         owner: root
         group: root
         mode: '0644'
-      with_items: "{{ share_sway_systemd }}"
+      loop: "{{ share_sway_systemd }}"
 
     - name: Copy files to /etc/sway/config.d
       copy:
@@ -89,9 +89,15 @@
         owner: root
         group: root
         mode: '0644'
-      with_items: "{{ etc_sway_configd }}"
+      loop: "{{ etc_sway_configd }}"
 
-    # Could also copy general contents of /etc/sway but we'll come back
+    # There are some other files in /etc/sway for general config
+    # but these don't seem to affect the main user's appearance in any way as they
+    # are overwritten by the files uploaded in the next block.
+    # I'd also have to upload the default.jpg background image.
+    #
+    # The numbered sway conf files are from Fedora Sway Spin and offer functionality
+    # like notifications, audio, system, etc.
 
 - name: Configure Sway
   block:
@@ -223,7 +229,7 @@
       git:
         repo: "{{ item.repo }}"
         dest: "/home/{{ user }}/.oh-my-zsh/custom/plugins/{{ item.name }}"
-      with_items: "{{ zsh_plugins }}"
+      loop: "{{ zsh_plugins }}"
 
     - name: Change ZSH theme
       lineinfile:
@@ -405,7 +411,7 @@
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: '0755'
-      with_items:
+      loop:
         - gtk-3.0
         - gtk-4.0
 
@@ -438,7 +444,7 @@
       unarchive:
         remote_src: yes
         src: "/home/{{ user }}/Downloads/gruvbox-icons.zip"
-        dest: "/home/{{ user }}/.icons/"
+        dest: "/home/{{ user }}/.icons/" # zip contains two items
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: '0755'
@@ -450,6 +456,6 @@
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: '0644'
-      with_items:
+      loop:
         - gtk-3.0
         - gtk-4.0
