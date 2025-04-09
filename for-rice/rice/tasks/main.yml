@@ -400,6 +400,21 @@
 
 - name: Configura zathura
   block:
+    - name: Create .config/zathura
+      file:
+        path: "/home/{{ user }}/.config/zathura"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Upload zathura config
+      copy:
+        src: zathurarc
+        dest: "/home/{{ user }}/.config/zathura/zathurarc"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
 
 - name: General system theme (Icons, GTK, etc)
   block:
