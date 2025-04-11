@@ -1,0 +1,16 @@
+---
+- hosts: database
+  become: yes
+
+  tasks:
+    - name: Create facts.d
+      file:
+        path: /etc/facts.d
+        state: directory
+
+    - name: Fill file
+      copy:
+        dest: /etc/facts.d/custom.fact
+        content: |
+          [sample_exam]
+          server_role=mysql
