@@ -1,0 +1,21 @@
+---
+- name: Task 14
+  hosts: database
+  become: yes
+
+  tasks:
+    - name: Create the directory
+      file:
+        path: /mnt/mysql_backups
+        state: directory
+
+    - name: Create the file
+      file:
+        content: "dev,test,qa,prod"
+        dest: /mnt/mysql_backups/database_list.txt
+
+    - name: Zip file
+      archive:
+        path: /mnt/mysql_backups/database_list.txt
+        dest: /mngt/mysql_backups/archive.gz
+        format: gz
