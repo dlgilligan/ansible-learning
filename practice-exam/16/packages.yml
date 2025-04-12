@@ -1,0 +1,21 @@
+---
+- name: Software packages
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install tcpdump and mailx
+      dnf:
+        name:
+          - tcpdump
+          - mailx
+        state: present
+      when: proxy in group_names
+
+    - name: Install lsof and mailx
+      dnf:
+        name:
+          - lsof
+          - mailx
+        state: present
+      when: database in group_names
