@@ -1,0 +1,19 @@
+---
+- name: Task 17
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: get the default target
+      command: systemctl get-default
+      register: get_target
+      changed_when: false
+
+    - name: Display a message
+      debug:
+        msg: 'target is already multi-user'
+      when: get_target.stdout == 'multi-user.target'
+
+    - name: Change target to multi-user
+      command: systemctl set-default multi-user.target
+      when: get_target.stdout != 'multi-user.target'
