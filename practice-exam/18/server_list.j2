@@ -1,0 +1,1 @@
+{{ groups['all'] | map('extract', hostvars, ['inventory_hostname']) | join(' ') }}
