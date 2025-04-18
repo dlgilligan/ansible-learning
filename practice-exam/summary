@@ -1,0 +1,52 @@
+1. Generate an example ansible config (/etc/ansible/ansible.cfg)
+`ansible-config init --disabled > search.cfg`
+
+2. To use `become` the user we're connecting to on the client machine, or ansible user, needs to
+have sudo access. If we don't have passwordless sudo access, we need to tell ansible to prompt us
+for the password. In adhoc commands, we use the `-k` option, typically along with the following
+options after configuring the module and arguments, `-u SUDOER -b -k`. When running a playbook, 
+we need to use `--ask-become-pass`.
+
+3. 
+- To completely replace the contents of a file, or to create a file and fill it in one module,
+  use the copy module. (For multi-line, use | in content)
+  copy:
+    dest:
+    content:
+
+- When running tasks on all hosts, and we only want a task to execute on a certain group, we can
+  use the group_names global variable. `when: '"proxy" in group_names'`
+
+4. Can use regex in lineinfile. Learn some basic regex.
+
+5. We can create a default vault password file and set it in the ansible.cfg (vault_password_file)
+
+6.
+- To load variables from a file into a playbook, we can use `vars_files` at the top level
+
+- Say we have an array in ansible, we can repeat a task over the contents of the array. We use the  variable "{{ item }}" in the task, then `loop: "{{ array_variable }}"`.
+
+- In tasks, we can use `block:` to create a block of tasks. We can use `loop`, `with_items`, or 
+  `when` on this block, and it is distributed to all inner tasks.
+
+9. We can create a role with `ansible-galaxy init role-name`. Variables in files in the vars subfolder and templates in j2 files in the templates subfolder are automatically loaded into the playbook.
+
+11. We can install a role through `ansible-galaxy install role-name`
+
+12. With roles, we set vars then call the role. 
+  vars:
+    selinux_booleans:
+      - name: httpd_can_network_connect
+        state: true
+	persistent: true
+
+  roles:
+    - rhel-system-roles.selinux
+
+13. We can access ansible facts through ansible_facts["index"]["key"] , or ansible_facts.index.key
+
+14. We can create facts on clients through /etc/ansible/facts.d , we can create a .fact file, 
+    then the facts are accessible through ansible_local.file_name.bracket_header.key
+
+17. We can use command, register, and when to execute tasks based on command output. Run the command using the command module, then capture the output with a register, then `when: reg.stdout == 
+'some_string'`
