@@ -11,7 +11,7 @@ Useful Variables:
 
 
 Jinja2 Functions:
-	lookup('file', '/path')
+	lookup('file', '/path')  # File content to string
 	regex_search('^2') # Pipe the string into the function `item | regex_search(...)`
 	join(' ') # Pipe an array into the function
 
@@ -50,5 +50,7 @@ firewalld:
 	permanent: yes
 	state: enabled
 
-
-
+- Create a file or replace all content (Use | for multi-line)
+copy:
+	dest: /whatever/path
+	content: "whatever path"
