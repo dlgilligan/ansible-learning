@@ -12,7 +12,8 @@ Useful Variables:
 
 Jinja2 Functions:
 	lookup('file', '/path')
-	regex_search('^2') # Pipe the string into the function `item | `
+	regex_search('^2') # Pipe the string into the function `item | regex_search(...)`
+	join(' ') # Pipe an array into the function
 
 Necessary Modules:
 	group
