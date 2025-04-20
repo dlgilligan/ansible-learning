@@ -1,0 +1,53 @@
+Commands:
+	ansible-all -m MODULE -a "..." -u SUDOER -b -k
+	ansible-vault encrypt FILE --vault-password-file PASSWORD_FILE
+	ansible-galaxy init ROLENAME
+	ansible-config init --disabled > holder_file
+	ansible-doc MODULE
+
+Useful Variables:
+	group_names
+	ansible_memtotal_mb
+
+
+Jinja2 Functions:
+	lookup('file', '/path')
+	regex_search('^2') # Pipe the string into the function `item | `
+
+Necessary Modules:
+	group
+	user
+	file
+	lineinfile
+	copy
+	service
+	authorized_key
+	cron
+	parted
+	lvg
+	lvol
+	filesystem
+	mount
+	package
+	template
+	systemd
+	firewalld
+	stat
+	sysctl
+	debug
+	archive
+	unarchive
+	dnf
+	command
+
+Task Recipes:
+
+- Expose service over firewall port
+firewalld:
+	service: httpd
+	immediate: yes
+	permanent: yes
+	state: enabled
+
+
+
